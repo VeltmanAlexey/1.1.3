@@ -32,13 +32,25 @@ public class UserDaoJDBCImpl implements UserDao {
 
     public void createUsersTable() {
         try {
-            statement = getConnectionJDBS().createStatement();
+            connection = getConnectionJDBS();
+            statement = connection.createStatement();
             statement.executeUpdate(createUsersTable);
+            connection.commit();
         } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
             throw new RuntimeException(e);
         } finally {
             try {
                 statement.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            try {
+                connection.close();
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
@@ -47,13 +59,25 @@ public class UserDaoJDBCImpl implements UserDao {
 
     public void dropUsersTable() {
         try {
-            statement = getConnectionJDBS().createStatement();
+            connection = getConnectionJDBS();
+            statement = connection.createStatement();
             statement.executeUpdate(dropUsersTable);
+            connection.commit();
         } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
             throw new RuntimeException(e);
         } finally {
             try {
                 statement.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            try {
+                connection.close();
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
@@ -62,17 +86,29 @@ public class UserDaoJDBCImpl implements UserDao {
 
     public void saveUser(String name, String lastName, byte age) {
         try {
-            preparedstatement = getConnectionJDBS().prepareStatement(saveUser);
+            connection = getConnectionJDBS();
+            preparedstatement = connection.prepareStatement(saveUser);
             preparedstatement.setString(1, name);
             preparedstatement.setString(2, lastName);
             preparedstatement.setByte(3, age);
             preparedstatement.executeUpdate();
             System.out.println("User с именем – "+ name +" добавлен в базу данных ");
+            connection.commit();
         } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
             throw new RuntimeException(e);
         } finally {
             try {
                 preparedstatement.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            try {
+                connection.close();
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
@@ -81,13 +117,25 @@ public class UserDaoJDBCImpl implements UserDao {
 
     public void removeUserById(long id) {
         try {
-            statement = getConnectionJDBS().createStatement();
+            connection = getConnectionJDBS();
+            statement = connection.createStatement();
             statement.execute(removeUserById + id);
+            connection.commit();
         } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
             throw new RuntimeException(e);
         } finally {
             try {
                 statement.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            try {
+                connection.close();
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
@@ -97,7 +145,8 @@ public class UserDaoJDBCImpl implements UserDao {
     public List<User> getAllUsers() {
         List<User> userList = new ArrayList<>();
         try {
-            statement = getConnectionJDBS().createStatement();
+            connection = getConnectionJDBS();
+            statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(getAllUsers);
 
             while (resultSet.next()) {
@@ -109,11 +158,22 @@ public class UserDaoJDBCImpl implements UserDao {
                 userList.add(user);
                 System.out.println(user);
             }
+            connection.commit();
         } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
             throw new RuntimeException(e);
         } finally {
             try {
                 statement.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            try {
+                connection.close();
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
@@ -123,10 +183,28 @@ public class UserDaoJDBCImpl implements UserDao {
 
     public void cleanUsersTable() {
         try {
-            statement = getConnectionJDBS().createStatement();
+            connection = getConnectionJDBS();
+            statement = connection.createStatement();
             statement.executeUpdate(cleanUsersTable);
+            connection.commit();
         } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                throw new RuntimeException(ex);
+            }
             throw new RuntimeException(e);
+        } finally {
+            try {
+                statement.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }
