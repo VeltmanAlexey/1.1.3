@@ -33,54 +33,30 @@ public class UserDaoJDBCImpl implements UserDao {
     public void createUsersTable() {
         try {
             connection = getConnectionJDBS();
+
             statement = connection.createStatement();
             statement.executeUpdate(createUsersTable);
+
             connection.commit();
         } catch (SQLException e) {
-            try {
-                connection.rollback();
-            } catch (SQLException ex) {
-                throw new RuntimeException(ex);
-            }
-            throw new RuntimeException(e);
+            rollbackMethod();
         } finally {
-            try {
-                statement.close();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
+            closeStatementAndConnection();
         }
     }
 
     public void dropUsersTable() {
         try {
             connection = getConnectionJDBS();
+
             statement = connection.createStatement();
             statement.executeUpdate(dropUsersTable);
+
             connection.commit();
         } catch (SQLException e) {
-            try {
-                connection.rollback();
-            } catch (SQLException ex) {
-                throw new RuntimeException(ex);
-            }
-            throw new RuntimeException(e);
+            rollbackMethod();
         } finally {
-            try {
-                statement.close();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
+            closeStatementAndConnection();
         }
     }
 
@@ -88,30 +64,19 @@ public class UserDaoJDBCImpl implements UserDao {
         try {
             connection = getConnectionJDBS();
             preparedstatement = connection.prepareStatement(saveUser);
+
             preparedstatement.setString(1, name);
             preparedstatement.setString(2, lastName);
             preparedstatement.setByte(3, age);
             preparedstatement.executeUpdate();
+
             System.out.println("User с именем – "+ name +" добавлен в базу данных ");
+
             connection.commit();
         } catch (SQLException e) {
-            try {
-                connection.rollback();
-            } catch (SQLException ex) {
-                throw new RuntimeException(ex);
-            }
-            throw new RuntimeException(e);
+            rollbackMethod();
         } finally {
-            try {
-                preparedstatement.close();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
+            closePreparedStatementAndConnection();
         }
     }
 
@@ -122,23 +87,9 @@ public class UserDaoJDBCImpl implements UserDao {
             statement.execute(removeUserById + id);
             connection.commit();
         } catch (SQLException e) {
-            try {
-                connection.rollback();
-            } catch (SQLException ex) {
-                throw new RuntimeException(ex);
-            }
-            throw new RuntimeException(e);
+            rollbackMethod();
         } finally {
-            try {
-                statement.close();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
+            closeStatementAndConnection();
         }
     }
 
@@ -158,25 +109,12 @@ public class UserDaoJDBCImpl implements UserDao {
                 userList.add(user);
                 System.out.println(user);
             }
+
             connection.commit();
         } catch (SQLException e) {
-            try {
-                connection.rollback();
-            } catch (SQLException ex) {
-                throw new RuntimeException(ex);
-            }
-            throw new RuntimeException(e);
+            rollbackMethod();
         } finally {
-            try {
-                statement.close();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
+            closeStatementAndConnection();
         }
         return userList;
     }
@@ -184,27 +122,53 @@ public class UserDaoJDBCImpl implements UserDao {
     public void cleanUsersTable() {
         try {
             connection = getConnectionJDBS();
+
             statement = connection.createStatement();
             statement.executeUpdate(cleanUsersTable);
+
             connection.commit();
         } catch (SQLException e) {
-            try {
-                connection.rollback();
-            } catch (SQLException ex) {
-                throw new RuntimeException(ex);
-            }
-            throw new RuntimeException(e);
+            rollbackMethod();
         } finally {
-            try {
-                statement.close();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
+            closeStatementAndConnection();
         }
     }
+
+    public void closePreparedStatementAndConnection(){
+        try {
+            preparedstatement.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void closeStatementAndConnection(){
+        try {
+            statement.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void rollbackMethod(){
+        try {
+            connection.rollback();
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+
 }
