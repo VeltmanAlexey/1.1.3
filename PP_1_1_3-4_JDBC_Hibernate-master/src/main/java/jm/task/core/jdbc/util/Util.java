@@ -25,27 +25,28 @@ public class Util {
         return connection;
     }
 
-//    private static SessionFactory sessionFactory;
-//
-//    public static SessionFactory getConnection() {
-//        if (sessionFactory == null) {
-//            try {
-//                Configuration configuration = new Configuration()
-//                        .setProperty(Environment.URL, URL)
-//                        .setProperty(Environment.USER, USER)
-//                        .setProperty(Environment.PASS, PASSWORD)
-//                        .setProperty(Environment.HBM2DDL_AUTO, "create-drop")
-//                        .setProperty(Environment.SHOW_SQL, "true")
-//                        .setProperty(Environment.CURRENT_SESSION_CONTEXT_CLASS, "thread")
-//                        .addAnnotatedClass(User.class);
-//                ServiceRegistry registry = new StandardServiceRegistryBuilder()
-//                        .applySettings(configuration.getProperties()).build();
-//                sessionFactory = configuration.buildSessionFactory(registry);
-//
-//            } catch (HibernateException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        return sessionFactory;
-//    }
+    private static SessionFactory sessionFactory;
+
+    public static SessionFactory getConnection() {
+        if (sessionFactory == null) {
+            try {
+                Configuration configuration = new Configuration()
+                        .setProperty(Environment.URL, URL)
+                        .setProperty(Environment.USER, USER)
+                        .setProperty(Environment.PASS, PASSWORD)
+                        .setProperty(Environment.HBM2DDL_AUTO, "create-drop")
+                        .setProperty(Environment.DIALECT, "org.hibernate.dialect.MySQL5Dialect")
+                        .setProperty(Environment.SHOW_SQL, "true")
+                        .setProperty(Environment.CURRENT_SESSION_CONTEXT_CLASS, "thread")
+                        .addAnnotatedClass(User.class);
+                ServiceRegistry registry = new StandardServiceRegistryBuilder()
+                        .applySettings(configuration.getProperties()).build();
+                sessionFactory = configuration.buildSessionFactory(registry);
+
+            } catch (HibernateException e) {
+                e.printStackTrace();
+            }
+        }
+        return sessionFactory;
+    }
 }
